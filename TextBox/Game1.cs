@@ -25,6 +25,7 @@ namespace TextBox
             // TODO: Add your initialization logic here
             inputButtons = new List<InputBox>();
             //Window.TextInput += TextInputHandler;
+            Window.AllowUserResizing = true;
             base.Initialize();
         }
 

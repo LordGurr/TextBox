@@ -107,9 +107,16 @@ namespace TextBox
             //setPos(rectangle.X - (int)offset.X, rectangle.Y - (int)offset.Y);
             //_spriteBatch.Draw(texture, new Rectangle(rectangle.X - (int)offset.X, rectangle.Y - (int)offset.Y, rectangle.Width, rectangle.Height), Color.White);
             _spriteBatch.Draw(texture, rectangle, rectangleColor);
-            Vector2 size = font.MeasureString(text);
-
+            Vector2 size = font.MeasureString(text) * 1.2f;
+            size.X += 5;
+            //if (size.X > rectangle.Width)
+            //{
+            //    _spriteBatch.DrawString(font, text, new Vector2(rectangle.Right - size.X, rectangle.Y), textColor, 0, new Vector2(/*0, size.Y / 2*/), 1.2f, SpriteEffects.None, 1);
+            //}
+            //else
+            //{
             _spriteBatch.DrawString(font, text, new Vector2(rectangle.X + 5, rectangle.Y), textColor, 0, new Vector2(/*0, size.Y / 2*/), 1.2f, SpriteEffects.None, 1);
+            //}
         }
 
         public void Draw(SpriteBatch _spriteBatch, SpriteFont font, Color color/*, Vector3 offset*/)

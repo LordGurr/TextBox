@@ -142,7 +142,7 @@ namespace TextBox
                 previousString = text;
                 if (input == '\b')
                 {
-                    if (text.Length > 0)
+                    if (text.Length > 0 && cursorPos > -1)
                     {
                         text = text.Remove(cursorPos, 1);
                         stringBuilder.Remove(cursorPos, 1);
@@ -161,10 +161,13 @@ namespace TextBox
                 if (font.Characters.Contains(input))
                 {
                     previousString = text;
-                    if (font.MeasureString(text + input).X > rectangle.Width && mulitpleLines)
+                    Vector2 temp = font.MeasureString(text + input) * 1.2f;
+                    temp.X += 5;
+                    if (temp.X > rectangle.Width && mulitpleLines)
                     {
-                        text += "\n";
-                        stringBuilder.Append("\n");
+                        text = text.Insert(cursorPos + 1, "\n");
+                        stringBuilder.Insert(cursorPos + 1, "\n");
+                        cursorPos++;
                     }
                     //text += input;
                     text = text.Insert(cursorPos + 1, input.ToString());
@@ -314,18 +317,46 @@ namespace TextBox
                 {
                     string realText = text;
                     text = text.Insert(cursorPos + 1, "|");
-                    base.Draw(_spriteBatch, _font);
+                    Vector2 size = font.MeasureString(text) * 1.2f;
+                    size.X += 5;
+                    if (size.X > rectangle.Width && cursorPos > -1 && font.MeasureString(text.Substring(0, cursorPos)).X * 1.2f + 10 > rectangle.Width)
+                    {
+                        _spriteBatch.Draw(texture, rectangle, rectangleColor);
+                        //_spriteBatch.DrawString(font, text, new Vector2(rectangle.Right - ((float)cursorPos / (float)text.Length) * size.X, rectangle.Y), textColor, 0, new Vector2(/*0, size.Y / 2*/), 1.2f, SpriteEffects.None, 1);
+                        _spriteBatch.DrawString(font, text, new Vector2(rectangle.Right - (font.MeasureString(text.Substring(0, cursorPos)).X * 1.2f + 50), rectangle.Y), textColor, 0, new Vector2(/*0, size.Y / 2*/), 1.2f, SpriteEffects.None, 1);
+                    }
+                    else
+                    {
+                        base.Draw(_spriteBatch, _font);
+                    }
                     text = realText;
+                    return;
                 }
-                else
-                {
-                    base.Draw(_spriteBatch, _font);
-                }
+                //else
+                //{
+                //    base.Draw(_spriteBatch, _font);
+                //}
             }
-            else
+            if (font != null)
             {
-                base.Draw(_spriteBatch, _font);
+                Vector2 size = font.MeasureString(text) * 1.2f;
+                size.X += 5;
+                if (size.X > rectangle.Width && cursorPos > -1 && font.MeasureString(text.Substring(0, cursorPos)).X * 1.2f + 10 > rectangle.Width)
+                {
+                    _spriteBatch.Draw(texture, rectangle, rectangleColor);
+                    //_spriteBatch.DrawString(font, text, new Vector2(rectangle.Right - ((float)cursorPos / (float)text.Length) * size.X, rectangle.Y), textColor, 0, new Vector2(/*0, size.Y / 2*/), 1.2f, SpriteEffects.None, 1);
+                    _spriteBatch.DrawString(font, text, new Vector2(rectangle.Right - (font.MeasureString(text.Substring(0, cursorPos)).X * 1.2f + 50), rectangle.Y), textColor, 0, new Vector2(/*0, size.Y / 2*/), 1.2f, SpriteEffects.None, 1);
+                    return;
+                }
             }
+            //else
+            //{
+            if (font != _font)
+            {
+                font = _font;
+            }
+            base.Draw(_spriteBatch, _font);
+            //}
         }
     }
 }
